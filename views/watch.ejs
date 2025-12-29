@@ -1,0 +1,118 @@
+<section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+  <div class="flex items-center justify-between gap-4">
+    <div class="min-w-0">
+      <a href="/?lang=<%= encodeURIComponent(lang) %>" class="text-sm text-white/60 hover:text-white">← Back</a>
+      <h1 class="mt-2 text-xl sm:text-2xl font-extrabold tracking-tight truncate">
+        Watch <span class="text-cs-accent">#<%= code %></span>
+      </h1>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="toggleEpisodesBtn"
+        class="bg-white/10 hover:bg-white/15 border border-white/10 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Episodes
+      </button>
+      <button id="toggleFullscreenBtn"
+        class="bg-white/10 hover:bg-white/15 border border-white/10 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Fullscreen
+      </button>
+    </div>
+  </div>
+
+  <!-- Player Shell -->
+  <div id="playerShell" class="mt-5 rounded-2xl overflow-hidden border border-white/10 bg-black shadow-glow">
+    <div id="playerWrap" class="relative w-full aspect-video bg-black">
+      <!-- Video element (native controls disabled) -->
+      <video id="video" class="absolute inset-0 w-full h-full" playsinline></video>
+
+      <!-- Big center play -->
+      <button id="centerPlay"
+        class="absolute inset-0 grid place-items-center opacity-0 pointer-events-none transition">
+        <div class="bg-black/35 border border-white/15 backdrop-blur px-6 py-4 rounded-2xl flex items-center gap-3">
+          <div class="w-3 h-3 bg-cs-accent rounded-sm"></div>
+          <div class="font-bold">Play</div>
+        </div>
+      </button>
+
+      <!-- Top gradient (title area) -->
+      <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/70 to-transparent pointer-events-none"></div>
+
+      <!-- Controls bar -->
+      <div id="controls"
+        class="absolute left-0 right-0 bottom-0 p-4 bg-gradient-to-t from-black/75 via-black/35 to-transparent transition-opacity duration-200">
+        <div class="flex items-center gap-3">
+          <button id="btnPlay" class="bg-white/10 hover:bg-white/15 border border-white/10 px-3 py-2 rounded-lg text-sm font-semibold">
+            Play
+          </button>
+
+          <div class="text-xs text-white/60 min-w-[92px] tabular-nums">
+            <span id="timeNow">0:00</span> / <span id="timeDur">0:00</span>
+          </div>
+
+          <!-- Progress -->
+          <div class="flex-1">
+            <div class="relative h-2 rounded-full bg-white/15 overflow-hidden cursor-pointer" id="progressTrack">
+              <div class="absolute inset-y-0 left-0 bg-cs-accent" id="progressFill" style="width:0%"></div>
+              <div class="absolute inset-y-0 left-0 bg-white/30" id="progressHover" style="width:0%; opacity:0"></div>
+            </div>
+          </div>
+
+          <!-- Volume -->
+          <div class="hidden sm:flex items-center gap-2 w-[160px]">
+            <span class="text-xs text-white/60">Vol</span>
+            <input id="vol" type="range" min="0" max="1" step="0.01" value="0.9" class="w-full accent-[rgb(229,9,20)]">
+          </div>
+
+          <!-- Quality -->
+          <div class="flex items-center gap-2">
+            <select id="quality"
+              class="bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg px-2 py-2 text-sm">
+              <option value="auto">Auto</option>
+              <option value="1080">1080p</option>
+              <option value="720">720p</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cursor inactivity hint -->
+      <div id="hint"
+        class="absolute top-4 right-4 text-xs text-white/60 bg-black/35 border border-white/10 rounded-lg px-3 py-2 backdrop-blur hidden">
+        Moving cursor shows controls
+      </div>
+    </div>
+  </div>
+
+  <!-- Episodes Drawer -->
+  <div id="episodesDrawer"
+    class="fixed right-0 top-0 h-full w-[360px] max-w-[90vw] bg-cs-surface border-l border-white/10 z-[70] translate-x-full transition-transform duration-200 shadow-glow">
+    <div class="h-16 flex items-center justify-between px-4 border-b border-white/10">
+      <div>
+        <div class="text-xs text-white/60">Episodes</div>
+        <div class="font-bold">Title code: <span class="text-white/80"><%= code %></span></div>
+      </div>
+      <button id="closeEpisodesBtn" class="bg-white/5 hover:bg-white/10 border border-white/10 px-3 py-2 rounded-lg text-sm">Close</button>
+    </div>
+
+    <div class="p-3 overflow-auto h-[calc(100%-4rem)] no-scrollbar">
+      <div id="episodesList" class="space-y-2"></div>
+    </div>
+  </div>
+
+  <div id="drawerBackdrop" class="hidden fixed inset-0 bg-black/60 z-[65]"></div>
+
+  <!-- Data blobs -->
+  <script type="application/json" id="boot">
+    <%- JSON.stringify({
+      code,
+      lang,
+      episodes: Array.isArray(episodes) ? episodes : [],
+      initialEpisode,
+      play
+    }) %>
+  </script>
+
+  <!-- HLS.js -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+  <script src="/public/js/player.js"></script>
+</section>
