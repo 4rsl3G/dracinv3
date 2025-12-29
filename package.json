@@ -1,0 +1,24 @@
+{
+  "name": "cinestream-pro",
+  "version": "1.0.0",
+  "description": "CineStream Pro - Netflix-like streaming UI with SQLite cache-aside and HLS.js custom player",
+  "main": "app.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node app.js",
+    "start": "NODE_ENV=production node app.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
+  }
+}
